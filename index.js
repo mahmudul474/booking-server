@@ -6,6 +6,10 @@ const port=process.env.PORT || 5000;
 
 
 
+
+app.use(cors())
+app.use(express.json())
+
   app.get('/',(req,res)=>{
     res.send('booking app server')
   })
@@ -32,10 +36,29 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    
+    const carcollection=client.db("taxi-booking").collection("cars")
+
+
+
+    ///save car 
+
+    app.post("/car", async(req, res) => {
+      const car=req.body
+       const result=await carcollection.insertOne(car)
+       res.send(result)
+    })
+
+
+  app.get("/car",async(req, res) => {
+    const result=await carcollection.find({}).toArray()
+    res.send(result)
+  })
+
+    
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+  
   }
 }
 run().catch(console.dir);
