@@ -39,6 +39,7 @@ async function run() {
 
     
     const carcollection=client.db("taxi-booking").collection("cars")
+    const ordercollection=client.db("taxi-booking").collection("orders")
 
 
 
@@ -55,6 +56,25 @@ async function run() {
     const result=await carcollection.find({}).toArray()
     res.send(result)
   })
+
+
+  app.post("/order", async(req,res)=>{
+    const order=req.body
+    const result=await ordercollection.insertOne(order)
+    res.send(result)
+  })
+  
+
+   app.get("/order", async(req,res)=>{
+    const result=await ordercollection.find({}).toArray()
+    res.send(result)
+
+   })
+
+
+
+
+
 
     
   } finally {
